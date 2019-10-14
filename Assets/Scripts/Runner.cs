@@ -38,23 +38,45 @@ public class Runner : MonoBehaviour {
         // Jump
         if (Input.GetButtonDown("Jump")) {
             if (touchingPlatform) {
-                rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
-                animator.SetBool("isJumping", true);
-                touchingPlatform = false;
-            } else if (boosts > 0) {                
-                rb.AddForce(boostVelocity, ForceMode.VelocityChange);
-                animator.SetBool("isBoosting", true);
-                StartCoroutine(StopBoost());
-                boosts -= 1;
+                PlayerJump();
+            } else if (boosts > 0) {
+                PlayerBoost();
+            }
+        }
+
+        if (Input.touchCount > 0) {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began) {
+                if (touchingPlatform) {
+                    PlayerJump();
+                } else if (boosts > 0) {
+                    PlayerBoost();
+                }
             }
         }
         
         DistanceTravelled = transform.localPosition.x; // Save distance travelled
+        GUIManager.SetDistance(DistanceTravelled);
 
         // Check for gameoverY
         if (transform.localPosition.y < gameOverY) {
             GameEventManager.TriggerGameOver();
         }
+    }
+
+    void PlayerJump() {
+        rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
+        animator.SetBool("isJumping", true);
+        touchingPlatform = false;
+    }
+
+    void PlayerBoost() {
+        rb.AddForce(boostVelocity, ForceMode.VelocityChange);
+        animator.SetBool("isBoosting", true);
+        StartCoroutine(StopBoost());
+        boosts -= 1;
+        GUIManager.SetBoosts(boosts);
     }
 
     void FixedUpdate() {
@@ -75,7 +97,9 @@ public class Runner : MonoBehaviour {
 
     private void GameStart() {
         boosts = 0;
+        GUIManager.SetBoosts(boosts);
         DistanceTravelled = 0f;
+        GUIManager.SetDistance(DistanceTravelled);
         transform.localPosition = StartPosition;
         meshRenderer.enabled = true;
         rb.isKinematic = false;
@@ -90,6 +114,7 @@ public class Runner : MonoBehaviour {
 
     public static void AddBoost() {
         boosts += 1;
+        GUIManager.SetBoosts(boosts);
     }
 
     IEnumerator StopBoost() {
