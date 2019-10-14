@@ -198,9 +198,23 @@ MonoBehaviour:
   prefab: {fileID: 6464297458828766521, guid: 93191f5d22dd6fc4ca083236ae88c70b, type: 3}
   numberOfObjects: 15
   recycleOffset: 200
-  startPosition: {x: -200, y: -50, z: 100}
-  minSize: {x: 10, y: 50, z: 10}
-  maxSize: {x: 55, y: 100, z: 10}
+  startPosition: {x: -200, y: -100, z: 100}
+  minSize: {x: 10, y: 75, z: 10}
+  maxSize: {x: 55, y: 200, z: 10}
+  minGap: {x: 0, y: 0, z: 0}
+  maxGap: {x: 10, y: 0, z: 0}
+  materials:
+  - {fileID: 2100000, guid: fe0e56cfefd49554e97a739a01474c86, type: 2}
+  - {fileID: 2100000, guid: 6c5c70312d4c777468c4bb424301038b, type: 2}
+  - {fileID: 2100000, guid: 6a086f0b949b2a34eb21e877cb8ea30a, type: 2}
+  - {fileID: 2100000, guid: d7e41ddf4cf92f242ac72107fff233bd, type: 2}
+  - {fileID: 2100000, guid: 3ea9c7811e185864bbf741cdbe356313, type: 2}
+  - {fileID: 2100000, guid: 0317bed8e530d8e418ff7c491b2f6f42, type: 2}
+  - {fileID: 2100000, guid: d47c0e90543acd9439d7c5d1c6f57d56, type: 2}
+  - {fileID: 2100000, guid: ae1b24974868ba24499270228ad50eaa, type: 2}
+  - {fileID: 2100000, guid: 409aa7d2fd9dcbd4c80ec4e841b3613b, type: 2}
+  - {fileID: 2100000, guid: 402ec554999071248b4b57cb8258d447, type: 2}
+  - {fileID: 2100000, guid: 57ab974834b0f7c4bbf5558a0d4bbbd2, type: 2}
 --- !u!1 &653271380
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,6 +913,20 @@ MonoBehaviour:
   startPosition: {x: -70, y: -50, z: 50}
   minSize: {x: 10, y: 20, z: 10}
   maxSize: {x: 30, y: 60, z: 10}
+  minGap: {x: 0, y: 0, z: 0}
+  maxGap: {x: 10, y: 0, z: 0}
+  materials:
+  - {fileID: 2100000, guid: 7df3ab0db4ff508408cbd4e339f4db38, type: 2}
+  - {fileID: 2100000, guid: 1de7d90448c1b0f4f925a66a679e0bbf, type: 2}
+  - {fileID: 2100000, guid: 8632f43d08a48a44da09cf7ea1b985c4, type: 2}
+  - {fileID: 2100000, guid: da636015a353cdf438a0164d8f173bb2, type: 2}
+  - {fileID: 2100000, guid: 0c9acd5f821230c4aa54ce41861bd0ad, type: 2}
+  - {fileID: 2100000, guid: 18c3b481cd9fe3343b512724d4a49d9b, type: 2}
+  - {fileID: 2100000, guid: 74c9fe62eeb0d3442925d17db620fc86, type: 2}
+  - {fileID: 2100000, guid: f1d9f6ea17792e54da43be52a0a47f30, type: 2}
+  - {fileID: 2100000, guid: e4cad8c49c66fc041939afed0b994add, type: 2}
+  - {fileID: 2100000, guid: 8bc81f5361780a7408fe95918b711c20, type: 2}
+  - {fileID: 2100000, guid: 3ca95e926ab01d947b424df6994906b7, type: 2}
 --- !u!1 &1602962960
 GameObject:
   m_ObjectHideFlags: 0
