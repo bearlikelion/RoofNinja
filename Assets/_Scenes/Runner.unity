@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   booster: {fileID: 1768420262}
-  prefab: {fileID: 8788692819919816086, guid: c1e1b135748b5ac47b8b162fde2f071f, type: 3}
+  prefab: {fileID: 8788692819919816086, guid: 6a38a93131bdbf7418b9d1a775f9d6eb, type: 3}
   numberOfObjects: 6
   recycleOffset: 20
   startPosition: {x: -1, y: 0, z: 0}
@@ -1294,6 +1294,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Booster
+      objectReference: {fileID: 0}
+    - target: {fileID: 4826203275941174617, guid: bf20d21047442de418958ebde600eedf,
+        type: 3}
+      propertyPath: spawnChance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4826203275941174618, guid: bf20d21047442de418958ebde600eedf,
         type: 3}

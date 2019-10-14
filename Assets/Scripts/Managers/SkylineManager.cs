@@ -55,6 +55,7 @@ public class SkylineManager : MonoBehaviour
         if (materials.Length > 0) {
             int materialIndex = Random.Range(0, materials.Length);
             o.GetComponent<Renderer>().material = materials[materialIndex];
+            o.GetComponent<Renderer>().material.mainTextureScale = new Vector2(scale.x/20, scale.y/20);
         }        
 
         nextPosition += new Vector3(
