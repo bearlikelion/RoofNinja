@@ -597,9 +597,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933e9da45a48a6f4e8eb522bf181d21a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverY: -10
-  acceleration: 2.5
-  jumpVelocity: {x: 2, y: 7, z: 0}
+  gameOverY: -6
+  Acceleration: 5
+  boostVelocity: {x: 10, y: 5, z: 0}
+  jumpVelocity: {x: 1, y: 7, z: 0}
 --- !u!54 &1880444148629284
 Rigidbody:
   m_ObjectHideFlags: 0

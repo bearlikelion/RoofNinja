@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class PlatformManager : MonoBehaviour {
 
+    public Booster booster;
     public Transform prefab;
     public int numberOfObjects;
     public float recycleOffset;
@@ -17,18 +18,19 @@ public class PlatformManager : MonoBehaviour {
     private Queue<Transform> objectQueue;
 
     void Start() {
+        GameEventManager.GameStart += GameStart;
+        GameEventManager.GameOver += GameOver;
+
         objectQueue = new Queue<Transform>(numberOfObjects);
         for (int i = 0; i < numberOfObjects; i++) {
-            objectQueue.Enqueue((Transform)Instantiate(prefab));
+            objectQueue.Enqueue((Transform)Instantiate(
+                prefab, new Vector3(0f, 0f, -100f), Quaternion.identity));
         }
-        nextPosition = startPosition;
-        for (int i = 0; i < numberOfObjects; i++) {
-            Recycle();
-        }
+        enabled = false;
     }
 
     void Update() {
-        if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.distanceTraveled) {
+        if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.DistanceTravelled) {
             Recycle();
         }
     }
@@ -42,6 +44,8 @@ public class PlatformManager : MonoBehaviour {
         Vector3 position = nextPosition;
         position.x += scale.x * 0.5f;
         position.y += scale.y * 0.5f;
+
+        booster.SpawnIfAvailable(position);
 
         Transform o = objectQueue.Dequeue();
         o.localScale = scale;
@@ -61,5 +65,17 @@ public class PlatformManager : MonoBehaviour {
         } else if (nextPosition.y > maxY) {
             nextPosition.y = maxY - maxGap.y;
         }
+    }
+
+    private void GameStart() {
+        nextPosition = startPosition;
+        for (int i = 0; i < numberOfObjects; i++) {
+            Recycle();
+        }
+        enabled = true;
+    }
+
+    private void GameOver() {
+        enabled = false;
     }
 }

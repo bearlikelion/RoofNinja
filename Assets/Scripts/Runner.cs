@@ -1,49 +1,66 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Runner : MonoBehaviour {
 
-    public static float distanceTraveled;
+    public static float DistanceTravelled;
+    private static int boosts;
 
     public float gameOverY;
-    public float acceleration;
-    public Vector3 jumpVelocity;
+    public float Acceleration;
+    public Vector3 boostVelocity, jumpVelocity;
 
     private bool touchingPlatform;
-    private Vector3 startPosition;
+    private Vector3 StartPosition;
 
     private Rigidbody rb;
     private Animator animator;
-    private SkinnedMeshRenderer renderer;
+    private SkinnedMeshRenderer meshRenderer;
 
     void Start() {
-        animator = GetComponent<Animator>();
-        renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        // Set variables
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
-        GameEventManager.GameStart += GameStart;
-        GameEventManager.GameOver += GameOver;
-        startPosition = transform.localPosition;
-        renderer.enabled = false;
+        // Start defaults
+        StartPosition = transform.localPosition;
+        meshRenderer.enabled = false;
         rb.isKinematic = true;
         enabled = false;
+
+        // Event hooks
+        GameEventManager.GameStart += GameStart;
+        GameEventManager.GameOver += GameOver;        
     }
 
     void Update() {
-        if (touchingPlatform && Input.GetButtonDown("Jump")) {
-            rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
-            animator.SetBool("isJumping", true);
-            touchingPlatform = false;
+        // Jump
+        if (Input.GetButtonDown("Jump")) {
+            if (touchingPlatform) {
+                rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
+                animator.SetBool("isJumping", true);
+                touchingPlatform = false;
+            } else if (boosts > 0) {                
+                rb.AddForce(boostVelocity, ForceMode.VelocityChange);
+                animator.SetBool("isBoosting", true);
+                StartCoroutine(StopBoost());
+                boosts -= 1;
+            }
         }
-        distanceTraveled = transform.localPosition.x;
+        
+        DistanceTravelled = transform.localPosition.x; // Save distance travelled
 
+        // Check for gameoverY
         if (transform.localPosition.y < gameOverY) {
             GameEventManager.TriggerGameOver();
         }
     }
 
     void FixedUpdate() {
+        // Move runnner by Acceleration
         if (touchingPlatform) {
-            rb.AddForce(acceleration, 0f, 0f, ForceMode.Acceleration);
+            rb.AddForce(Acceleration, 0f, 0f, ForceMode.Acceleration);
         }
     }
 
@@ -56,18 +73,27 @@ public class Runner : MonoBehaviour {
         touchingPlatform = false;
     }
 
-
     private void GameStart() {
-        distanceTraveled = 0f;
-        transform.localPosition = startPosition;
-        renderer.enabled = true;
+        boosts = 0;
+        DistanceTravelled = 0f;
+        transform.localPosition = StartPosition;
+        meshRenderer.enabled = true;
         rb.isKinematic = false;
         enabled = true;
     }
 
     private void GameOver() {
-        renderer.enabled = false;
+        meshRenderer.enabled = false;
         rb.isKinematic = true;
         enabled = false;
+    }
+
+    public static void AddBoost() {
+        boosts += 1;
+    }
+
+    IEnumerator StopBoost() {
+        yield return new WaitForSeconds(1.5f);
+        animator.SetBool("isBoosting", false);
     }
 }
