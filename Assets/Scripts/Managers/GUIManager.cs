@@ -14,7 +14,9 @@ public class GUIManager : MonoBehaviour {
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
 
-        gameOverText.enabled = false;    
+        gameOverText.enabled = false;
+        distanceText.text = "";
+        boostText.text = "";        
     }
 
     void Update() {
