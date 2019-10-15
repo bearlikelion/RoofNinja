@@ -107,6 +107,12 @@ public class Runner : MonoBehaviour {
     }
 
     private void GameOver() {
+        PlayerPrefs.SetFloat("LastRun", DistanceTravelled); // Set last run
+        
+        if (!PlayerPrefs.HasKey("HighScore") || DistanceTravelled > PlayerPrefs.GetFloat("HighScore")) {
+            PlayerPrefs.SetFloat("HighScore", DistanceTravelled);
+        }
+
         meshRenderer.enabled = false;
         rb.isKinematic = true;
         enabled = false;

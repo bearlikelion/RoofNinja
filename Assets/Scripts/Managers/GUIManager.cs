@@ -5,7 +5,7 @@ public class GUIManager : MonoBehaviour {
 
     private static GUIManager instance;
 
-    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText;
+    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText;
 
     void Start() {
         instance = this;
@@ -16,7 +16,7 @@ public class GUIManager : MonoBehaviour {
 
         gameOverText.enabled = false;
         distanceText.text = "";
-        boostText.text = "";        
+        boostText.text = "";               
     }
 
     void Update() {
@@ -47,6 +47,10 @@ public class GUIManager : MonoBehaviour {
         instructionsText.enabled = false;
         runnerText.enabled = false;
         enabled = false;
+
+        if (PlayerPrefs.HasKey("HighScore")) {
+            highscoreText.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f0");
+        }
     }
 
     private void GameOver() {
