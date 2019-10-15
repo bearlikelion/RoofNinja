@@ -11,6 +11,7 @@ public class SkylineManager : MonoBehaviour
     public Vector3 minSize, maxSize, minGap, maxGap;
     
     public Material[] materials;
+    public Transform parent;
 
     private Vector3 nextPosition;
     private Queue<Transform> objectQueue;
@@ -21,8 +22,7 @@ public class SkylineManager : MonoBehaviour
 
         objectQueue = new Queue<Transform>(numberOfObjects);
         for (int i = 0; i < numberOfObjects; i++) {
-            objectQueue.Enqueue((Transform)Instantiate(
-                prefab, new Vector3(0f, 0f, -100f), Quaternion.identity));
+            objectQueue.Enqueue((Transform)Instantiate(prefab, new Vector3(0f, 0f, -100f), Quaternion.identity, parent));
         }
 
         GameStart();
