@@ -8,15 +8,22 @@ public class GUIManager : MonoBehaviour {
     public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText;
 
     void Start() {
-        instance = this;
+        instance = this;        
+
+        gameOverText.enabled = false;
+        distanceText.text = "";
+        boostText.text = "";
+
+        // Show Highschore
+        if (PlayerPrefs.HasKey("HighScore")) {
+            highscoreText.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f0");
+        } else {
+            highscoreText.text = "";
+        }
 
         // Event Hooks
         GameEventManager.GameStart += GameStart;
         GameEventManager.GameOver += GameOver;
-
-        gameOverText.enabled = false;
-        distanceText.text = "";
-        boostText.text = "";               
     }
 
     void Update() {
@@ -31,10 +38,16 @@ public class GUIManager : MonoBehaviour {
                 GameEventManager.TriggerGameStart();
             }
         }
+
+        if (PlayerPrefs.HasKey("HighScore")) {
+            if (Runner.DistanceTravelled > PlayerPrefs.GetFloat("HighScore")) {
+                highscoreText.text = "High Score: " + Runner.DistanceTravelled.ToString("f0");
+            }
+        }        
     }
 
     public static void SetBoosts(int boosts) {
-        instance.boostText.text = boosts.ToString();
+        instance.boostText.text = "Boosts: " + boosts.ToString();
     }
 
     public static void SetDistance(float distance) {
@@ -46,11 +59,7 @@ public class GUIManager : MonoBehaviour {
         gameOverText.enabled = false;
         instructionsText.enabled = false;
         runnerText.enabled = false;
-        enabled = false;
-
-        if (PlayerPrefs.HasKey("HighScore")) {
-            highscoreText.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f0");
-        }
+        enabled = false;        
     }
 
     private void GameOver() {

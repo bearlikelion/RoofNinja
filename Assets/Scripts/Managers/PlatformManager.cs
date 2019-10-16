@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PlatformManager : MonoBehaviour {
 
     public Booster booster;
     public Transform prefab;
-    public int numberOfObjects;
+    public int numberOfObjects, difficultySeconds;
     public float recycleOffset;
     public Vector3 startPosition;
     public Vector3 minSize, maxSize, minGap, maxGap;
@@ -16,18 +17,25 @@ public class PlatformManager : MonoBehaviour {
     public Material[] materials;
     public PhysicMaterial[] physicMaterials;
 
+    private float _minGapX, _maxGapX;
+
     private Vector3 nextPosition;
     private Queue<Transform> objectQueue;
 
     void Start() {
-        GameEventManager.GameStart += GameStart;
-        GameEventManager.GameOver += GameOver;
+        // Store default diffulty
+        _minGapX = minGap.x;
+        _maxGapX = maxGap.x;
 
         objectQueue = new Queue<Transform>(numberOfObjects);
         for (int i = 0; i < numberOfObjects; i++) {
-            objectQueue.Enqueue((Transform)Instantiate(prefab, new Vector3(0f, 0f, -100f), Quaternion.identity, parent));
+            objectQueue.Enqueue(Instantiate(prefab, new Vector3(0f, 0f, -100f), Quaternion.identity, parent));
         }
         enabled = false;
+
+        // Event hooks
+        GameEventManager.GameStart += GameStart;
+        GameEventManager.GameOver += GameOver;
     }
 
     void Update() {
@@ -69,14 +77,28 @@ public class PlatformManager : MonoBehaviour {
     }
 
     private void GameStart() {
+        minGap.x = _minGapX;
+        maxGap.x = _maxGapX;
+
+        StartCoroutine(IncreaseDifficulty());
+
         nextPosition = startPosition;
         for (int i = 0; i < numberOfObjects; i++) {
             Recycle();
         }
+
         enabled = true;
     }
 
     private void GameOver() {
         enabled = false;
+    }
+
+    IEnumerator IncreaseDifficulty() {
+        while(true) {
+            yield return new WaitForSeconds(difficultySeconds);
+            minGap.x += 0.25f;
+            maxGap.x += 0.25f;
+        }        
     }
 }

@@ -6,21 +6,25 @@ public class Runner : MonoBehaviour {
     public static float DistanceTravelled;
     private static int boosts;
 
-    public float gameOverY;
-    public float Acceleration;
-    public Vector3 boostVelocity, jumpVelocity;
+    public AudioClip jumpSound, boostSound, deathSound;
 
-    private bool touchingPlatform;
+    public float gameOverY;
+    public float Acceleration;    
+    public Vector3 boostVelocity, jumpVelocity;
+    
+    private bool touchingPlatform, canBoost;
     private Vector3 StartPosition;
 
     private Rigidbody rb;
     private Animator animator;
+    private AudioSource AudioSource;
     private SkinnedMeshRenderer meshRenderer;
 
     void Start() {
-        // Set variables
-        rb = GetComponent<Rigidbody>();
+        // Set variables        
+        rb = GetComponent<Rigidbody>();       
         animator = GetComponent<Animator>();
+        AudioSource = Camera.main.GetComponent<AudioSource>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
         // Start defaults
@@ -39,7 +43,7 @@ public class Runner : MonoBehaviour {
         if (Input.GetButtonDown("Jump")) {
             if (touchingPlatform) {
                 PlayerJump();
-            } else if (boosts > 0) {
+            } else if (boosts > 0 && canBoost) {
                 PlayerBoost();
             }
         }
@@ -50,7 +54,7 @@ public class Runner : MonoBehaviour {
             if (touch.phase == TouchPhase.Began) {
                 if (touchingPlatform) {
                     PlayerJump();
-                } else if (boosts > 0) {
+                } else if (boosts > 0 && canBoost) {
                     PlayerBoost();
                 }
             }
@@ -68,14 +72,18 @@ public class Runner : MonoBehaviour {
     void PlayerJump() {
         rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
         animator.SetBool("isJumping", true);
+        AudioSource.PlayOneShot(jumpSound);
         touchingPlatform = false;
     }
 
     void PlayerBoost() {
         rb.AddForce(boostVelocity, ForceMode.VelocityChange);
         animator.SetBool("isBoosting", true);
+        AudioSource.PlayOneShot(boostSound);
         StartCoroutine(StopBoost());
+        canBoost = false;
         boosts -= 1;
+
         GUIManager.SetBoosts(boosts);
     }
 
@@ -87,8 +95,9 @@ public class Runner : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        animator.SetBool("isJumping", false);
+        animator.SetBool("isJumping", false);        
         touchingPlatform = true;
+        canBoost = true;
     }
 
     void OnCollisionExit(Collision collision) {
@@ -109,10 +118,12 @@ public class Runner : MonoBehaviour {
     private void GameOver() {
         PlayerPrefs.SetFloat("LastRun", DistanceTravelled); // Set last run
         
+        // Update highscore
         if (!PlayerPrefs.HasKey("HighScore") || DistanceTravelled > PlayerPrefs.GetFloat("HighScore")) {
             PlayerPrefs.SetFloat("HighScore", DistanceTravelled);
         }
 
+        AudioSource.PlayOneShot(deathSound);
         meshRenderer.enabled = false;
         rb.isKinematic = true;
         enabled = false;
