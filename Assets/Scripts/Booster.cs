@@ -5,7 +5,12 @@ public class Booster : MonoBehaviour {
     public Vector3 offset, rotationVelocity;
     public float recycleOffset, spawnChance;
 
+    public AudioClip pickupSound;
+
+    private AudioSource _audioSource;
+
     void Start() {
+        _audioSource = Camera.main.GetComponent<AudioSource>();
         GameEventManager.GameOver += GameOver;
         gameObject.SetActive(false);
     }
@@ -32,6 +37,7 @@ public class Booster : MonoBehaviour {
 
     void OnTriggerEnter() {
         Runner.AddBoost();
+        _audioSource.PlayOneShot(pickupSound);
         gameObject.SetActive(false);
     }
 }

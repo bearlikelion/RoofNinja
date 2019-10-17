@@ -10,7 +10,7 @@ public class Runner : MonoBehaviour {
 
     public float gameOverY;
     public float Acceleration;    
-    public Vector3 boostVelocity, jumpVelocity;
+    public Vector3 boostVelocity, jumpVelocity, climbVelocity;
     
     private bool touchingPlatform, canBoost;
     private Vector3 StartPosition;
@@ -41,8 +41,15 @@ public class Runner : MonoBehaviour {
     void Update() {
         // Jump
         if (Input.GetButtonDown("Jump")) {
+            Debug.Log("X Velo:" + rb.velocity.x);
+
             if (touchingPlatform) {
-                PlayerJump();
+                if (rb.velocity.x > 0) {
+                    PlayerJump();
+                } else {
+                    PlayerClimb();                    
+                }
+                
             } else if (boosts > 0 && canBoost) {
                 PlayerBoost();
             }
@@ -53,7 +60,11 @@ public class Runner : MonoBehaviour {
 
             if (touch.phase == TouchPhase.Began) {
                 if (touchingPlatform) {
-                    PlayerJump();
+                    if (rb.velocity.x > 0) {
+                        PlayerJump();
+                    } else {
+                        PlayerClimb();
+                    }                    
                 } else if (boosts > 0 && canBoost) {
                     PlayerBoost();
                 }
@@ -61,12 +72,19 @@ public class Runner : MonoBehaviour {
         }
         
         DistanceTravelled = transform.localPosition.x; // Save distance travelled
-        GUIManager.SetDistance(DistanceTravelled);
+        UIManager.SetDistance(DistanceTravelled);
 
         // Check for gameoverY
         if (transform.localPosition.y < gameOverY) {
             GameEventManager.TriggerGameOver();
         }
+    }
+
+    void PlayerClimb() {
+        Debug.Log("CLIMB!");
+        rb.AddForce(climbVelocity, ForceMode.VelocityChange);
+        animator.SetBool("isClimbing", true);
+        StartCoroutine(StopClimb());
     }
 
     void PlayerJump() {
@@ -84,7 +102,7 @@ public class Runner : MonoBehaviour {
         canBoost = false;
         boosts -= 1;
 
-        GUIManager.SetBoosts(boosts);
+        UIManager.SetBoosts(boosts);
     }
 
     void FixedUpdate() {
@@ -106,9 +124,9 @@ public class Runner : MonoBehaviour {
 
     private void GameStart() {
         boosts = 0;
-        GUIManager.SetBoosts(boosts);
+        UIManager.SetBoosts(boosts);
         DistanceTravelled = 0f;
-        GUIManager.SetDistance(DistanceTravelled);
+        UIManager.SetDistance(DistanceTravelled);
         transform.localPosition = StartPosition;
         meshRenderer.enabled = true;
         rb.isKinematic = false;
@@ -131,11 +149,16 @@ public class Runner : MonoBehaviour {
 
     public static void AddBoost() {
         boosts += 1;
-        GUIManager.SetBoosts(boosts);
+        UIManager.SetBoosts(boosts);
     }
 
     IEnumerator StopBoost() {
         yield return new WaitForSeconds(1.5f);
         animator.SetBool("isBoosting", false);
+    }
+
+    IEnumerator StopClimb() {
+        yield return new WaitForSeconds(1.36f); // HACK: Magic number
+        animator.SetBool("isClimbing", false);
     }
 }

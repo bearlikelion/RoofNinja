@@ -33,9 +33,11 @@ public class SkylineManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.DistanceTravelled) {
-            Recycle();
-        }
+        if (Runner.DistanceTravelled > 2) {
+            if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.DistanceTravelled) {
+                Recycle();
+            }
+        }        
     }
 
     private void Recycle() {

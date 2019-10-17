@@ -6,7 +6,7 @@ public class PlatformManager : MonoBehaviour {
 
     public Booster booster;
     public Transform prefab;
-    public int numberOfObjects, difficultySeconds;
+    public int numberOfObjects;
     public float recycleOffset;
     public Vector3 startPosition;
     public Vector3 minSize, maxSize, minGap, maxGap;
@@ -18,6 +18,7 @@ public class PlatformManager : MonoBehaviour {
     public PhysicMaterial[] physicMaterials;
 
     private float _minGapX, _maxGapX;
+    private bool diffTick = false;
 
     private Vector3 nextPosition;
     private Queue<Transform> objectQueue;
@@ -42,6 +43,46 @@ public class PlatformManager : MonoBehaviour {
         if (objectQueue.Peek().localPosition.x + recycleOffset < Runner.DistanceTravelled) {
             Recycle();
         }
+
+        if (Mathf.Round(Runner.DistanceTravelled) % 100 == 0 && !diffTick) {
+            IncreaseDifficulty();
+        }
+    }
+
+    private void IncreaseDifficulty() {
+        Debug.Log("Increase Gap");        
+        StartCoroutine(DifficultyTick());
+        if (minGap.x < 10) {
+            minGap.x += 0.15f;
+        }
+
+        if (maxGap.x < 15) {
+            maxGap.x += 0.25f;
+        }        
+    }
+
+    IEnumerator DifficultyTick() {
+        diffTick = true;
+        yield return new WaitForSeconds(1.0f);
+        diffTick = false;
+    }
+    
+    private void GameStart() {
+        minGap.x = _minGapX;
+        maxGap.x = _maxGapX;
+
+        // StartCoroutine(IncreaseDifficulty());
+
+        nextPosition = startPosition;
+        for (int i = 0; i < numberOfObjects; i++) {
+            Recycle();
+        }
+
+        enabled = true;
+    }
+
+    private void GameOver() {
+        enabled = false;
     }
 
     private void Recycle() {
@@ -76,29 +117,4 @@ public class PlatformManager : MonoBehaviour {
         }
     }
 
-    private void GameStart() {
-        minGap.x = _minGapX;
-        maxGap.x = _maxGapX;
-
-        StartCoroutine(IncreaseDifficulty());
-
-        nextPosition = startPosition;
-        for (int i = 0; i < numberOfObjects; i++) {
-            Recycle();
-        }
-
-        enabled = true;
-    }
-
-    private void GameOver() {
-        enabled = false;
-    }
-
-    IEnumerator IncreaseDifficulty() {
-        while(true) {
-            yield return new WaitForSeconds(difficultySeconds);
-            minGap.x += 0.25f;
-            maxGap.x += 0.25f;
-        }        
-    }
 }
