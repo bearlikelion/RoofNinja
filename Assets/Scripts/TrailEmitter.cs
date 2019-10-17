@@ -15,8 +15,7 @@ public class TrailEmitter : MonoBehaviour
     }
 
     private void Update() {
-        if (Runner.DistanceTravelled <= 1 && gameStarted) {
-            Debug.Log("Clear trail");
+        if (Runner.DistanceTravelled <= 1 && gameStarted) {            
             tr.Clear();
         }
     }    

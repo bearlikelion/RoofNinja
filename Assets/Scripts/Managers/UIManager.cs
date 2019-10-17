@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour {
 
     private static UIManager instance;
 
-    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText;
+    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText, muteButtonText;
+
+    private AudioSource music;
+    private EventSystem es;
 
     private bool gameisRunning = false;
 
     void Start() {
-        instance = this;        
+        instance = this;
+
+        music = Camera.main.GetComponent<AudioSource>();
+        es = GetComponentInChildren<EventSystem>();
 
         gameOverText.enabled = false;
         distanceText.text = "";
@@ -52,6 +59,24 @@ public class UIManager : MonoBehaviour {
                 highscoreText.text = "High Score: " + Runner.DistanceTravelled.ToString("f0");
             }
         }
+    }
+
+    public void ToggleMusic() {
+        if (music.mute) {
+            music.mute = false;
+            muteButtonText.text = "Mute\nMusic";
+        } else {
+            music.mute = true;
+            muteButtonText.text = "Unmute\nMusic";
+        }        
+    }    
+
+    public static bool IsTouchingUI() {
+        if (instance.es.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) {
+            return true;
+        } else {
+            return false;
+        }        
     }
 
     public static void SetBoosts(int boosts) {

@@ -24,7 +24,7 @@ public class Runner : MonoBehaviour {
         // Set variables        
         rb = GetComponent<Rigidbody>();       
         animator = GetComponent<Animator>();
-        AudioSource = Camera.main.GetComponent<AudioSource>();
+        AudioSource = GetComponent<AudioSource>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
 
         // Start defaults
@@ -55,7 +55,7 @@ public class Runner : MonoBehaviour {
             }
         }
 
-        if (Input.touchCount > 0) {
+        if (Input.touchCount > 0 && !UIManager.IsTouchingUI()) {
             Touch touch = Input.GetTouch(0);
 
             if (touch.phase == TouchPhase.Began) {

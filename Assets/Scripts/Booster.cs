@@ -10,7 +10,7 @@ public class Booster : MonoBehaviour {
     private AudioSource _audioSource;
 
     void Start() {
-        _audioSource = Camera.main.GetComponent<AudioSource>();
+        _audioSource = GameObject.FindGameObjectWithTag("Player").GetComponent<AudioSource>();
         GameEventManager.GameOver += GameOver;
         gameObject.SetActive(false);
     }
