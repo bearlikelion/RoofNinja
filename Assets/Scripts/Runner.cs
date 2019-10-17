@@ -12,7 +12,7 @@ public class Runner : MonoBehaviour {
     public float Acceleration;    
     public Vector3 boostVelocity, jumpVelocity, climbVelocity;
     
-    private bool touchingPlatform, canBoost;
+    private bool touchingPlatform, canBoost, canClimb;
     private Vector3 StartPosition;
 
     private Rigidbody rb;
@@ -31,6 +31,7 @@ public class Runner : MonoBehaviour {
         StartPosition = transform.localPosition;
         meshRenderer.enabled = false;
         rb.isKinematic = true;
+        canClimb = true;
         enabled = false;
 
         // Event hooks
@@ -81,10 +82,13 @@ public class Runner : MonoBehaviour {
     }
 
     void PlayerClimb() {
-        Debug.Log("CLIMB!");
-        rb.AddForce(climbVelocity, ForceMode.VelocityChange);
-        animator.SetBool("isClimbing", true);
-        StartCoroutine(StopClimb());
+        if (canClimb) {
+            Debug.Log("CLIMB!");
+            canClimb = false;
+            rb.AddForce(climbVelocity, ForceMode.VelocityChange);
+            animator.SetBool("isClimbing", true);
+            StartCoroutine(StopClimb());
+        }        
     }
 
     void PlayerJump() {
@@ -160,5 +164,6 @@ public class Runner : MonoBehaviour {
     IEnumerator StopClimb() {
         yield return new WaitForSeconds(1.36f); // HACK: Magic number
         animator.SetBool("isClimbing", false);
+        canClimb = true;
     }
 }
