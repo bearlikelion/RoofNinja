@@ -14,7 +14,8 @@ public class PlatformManager : MonoBehaviour {
 
     public Transform parent;
 
-    public Material[] materials;
+    public Texture[] textures;
+    public Material[] materials;    
     public PhysicMaterial[] physicMaterials;
 
     private float _minGapX, _maxGapX;
@@ -100,9 +101,18 @@ public class PlatformManager : MonoBehaviour {
         Transform o = objectQueue.Dequeue();
         o.localScale = scale;
         o.localPosition = position;
+
         int materialIndex = Random.Range(0, materials.Length);
-        o.GetComponent<Renderer>().material = materials[materialIndex];
+        int textureIndex = Random.Range(0, textures.Length);
+        int textureScale = Random.Range(1, 5);
+
         o.GetComponent<Collider>().material = physicMaterials[materialIndex];
+
+        Renderer renderer = o.GetComponent<Renderer>();        
+        renderer.material = materials[materialIndex];        
+        renderer.material.SetTexture("_MainTex", textures[textureIndex]);        
+        renderer.material.mainTextureScale = new Vector2(textureScale, textureScale);
+
         objectQueue.Enqueue(o);
 
         nextPosition += new Vector3(

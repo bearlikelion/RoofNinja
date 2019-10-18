@@ -7,6 +7,7 @@ public class Runner : MonoBehaviour {
     private static int boosts;
 
     public AudioClip jumpSound, boostSound, deathSound;
+    public AudioSource footsteps;
 
     public float gameOverY;
     public float Acceleration;    
@@ -117,13 +118,15 @@ public class Runner : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        animator.SetBool("isJumping", false);        
+        footsteps.Play();
+        animator.SetBool("isJumping", false);
         touchingPlatform = true;
         canBoost = true;
     }
 
     void OnCollisionExit(Collision collision) {
-        touchingPlatform = false;
+        footsteps.Stop();
+        touchingPlatform = false;        
     }
 
     private void GameStart() {

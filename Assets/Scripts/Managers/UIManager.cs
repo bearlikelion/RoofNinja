@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour {
 
     public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText, muteButtonText, fpsText;
 
-    private AudioSource music;
+    private AudioSource[] music;
     private EventSystem es;
 
     private bool gameisRunning = false;
@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour {
     void Start() {
         instance = this;
 
-        music = Camera.main.GetComponent<AudioSource>();
+        music = Camera.main.GetComponents<AudioSource>();
         es = GetComponentInChildren<EventSystem>();
 
         gameOverText.enabled = false;
@@ -68,12 +68,14 @@ public class UIManager : MonoBehaviour {
     }
 
     public void ToggleMusic() {
-        if (music.mute) {
-            music.mute = false;
-            muteButtonText.color = new Color(255f, 255f, 255f, 255f);
-        } else {
-            music.mute = true;
-            muteButtonText.color = new Color(255f, 255f, 255f, 0.5f);
+        foreach(AudioSource sound in music) {
+            if (sound.mute) {
+                sound.mute = false;
+                muteButtonText.color = new Color(255f, 255f, 255f, 255f);
+            } else {
+                sound.mute = true;
+                muteButtonText.color = new Color(255f, 255f, 255f, 0.5f);
+            }
         }        
     }    
 
