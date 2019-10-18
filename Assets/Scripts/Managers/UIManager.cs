@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour {
 
     private static UIManager instance;
 
-    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText, muteButtonText;
+    public TextMeshProUGUI boostText, distanceText, gameOverText, instructionsText, runnerText, highscoreText, muteButtonText, fpsText;
 
     private AudioSource music;
     private EventSystem es;
@@ -30,16 +30,12 @@ public class UIManager : MonoBehaviour {
         GameEventManager.GameOver += GameOver;
     }
 
-    void UpdateHighScore() {
-        // Show Highschore
-        if (PlayerPrefs.HasKey("HighScore")) {
-            highscoreText.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f0");
-        } else {
-            highscoreText.text = "";
-        }
-    }
-
     void Update() {
+        // Calculate framerate 
+        int current = 0;
+        current = (int)(1f / Time.unscaledDeltaTime);
+        fpsText.text = current.ToString() + "FPS";
+
         if (!gameisRunning) {
             if (Input.GetButtonDown("Jump")) {
                 GameEventManager.TriggerGameStart();
@@ -59,6 +55,15 @@ public class UIManager : MonoBehaviour {
             if (Runner.DistanceTravelled > PlayerPrefs.GetFloat("HighScore")) {
                 highscoreText.text = "High Score: " + Runner.DistanceTravelled.ToString("f0");
             }
+        }
+    }
+
+    void UpdateHighScore() {
+        // Show Highschore
+        if (PlayerPrefs.HasKey("HighScore")) {
+            highscoreText.text = "High Score: " + PlayerPrefs.GetFloat("HighScore").ToString("f0");
+        } else {
+            highscoreText.text = "";
         }
     }
 
@@ -93,15 +98,13 @@ public class UIManager : MonoBehaviour {
         UpdateHighScore();
         gameOverText.enabled = false;
         instructionsText.enabled = false;
-        runnerText.enabled = false;
-        // enabled = false;        
+        runnerText.enabled = false;        
         gameisRunning = true;
     }
 
     private void GameOver() {
         gameOverText.enabled = true;
-        instructionsText.enabled = true;
-        // enabled = true;
+        instructionsText.enabled = true;        
         gameisRunning = false;
     }
 }
