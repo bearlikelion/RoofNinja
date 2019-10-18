@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour {
                 GameEventManager.TriggerGameStart();
             }
 
-            if (Input.touchCount > 0) {
+            if (Input.touchCount > 0 && !IsTouchingUI()) {
                 Touch touch = Input.GetTouch(0);
 
                 if (touch.phase == TouchPhase.Began) {
@@ -54,6 +54,7 @@ public class UIManager : MonoBehaviour {
             }
         }
 
+        // Live update highscore
         if (PlayerPrefs.HasKey("HighScore")) {
             if (Runner.DistanceTravelled > PlayerPrefs.GetFloat("HighScore")) {
                 highscoreText.text = "High Score: " + Runner.DistanceTravelled.ToString("f0");
@@ -64,10 +65,10 @@ public class UIManager : MonoBehaviour {
     public void ToggleMusic() {
         if (music.mute) {
             music.mute = false;
-            muteButtonText.text = "Mute\nMusic";
+            muteButtonText.color = new Color(255f, 255f, 255f, 255f);
         } else {
             music.mute = true;
-            muteButtonText.text = "Unmute\nMusic";
+            muteButtonText.color = new Color(255f, 255f, 255f, 0.5f);
         }        
     }    
 
