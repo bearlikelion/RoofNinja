@@ -6,7 +6,7 @@ public class Runner : MonoBehaviour {
     public static float DistanceTravelled;
     private static int boosts;
 
-    public AudioClip jumpSound, boostSound, deathSound;
+    public AudioClip jumpSound, boostSound, climbSound, deathSound;
     public AudioSource footsteps;
 
     public float gameOverY;
@@ -87,6 +87,7 @@ public class Runner : MonoBehaviour {
             Debug.Log("CLIMB!");
             canClimb = false;
             rb.AddForce(climbVelocity, ForceMode.VelocityChange);
+            AudioSource.PlayOneShot(climbSound);
             animator.SetBool("isClimbing", true);
             StartCoroutine(StopClimb());
         }        
