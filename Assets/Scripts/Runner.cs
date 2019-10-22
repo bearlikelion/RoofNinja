@@ -41,10 +41,8 @@ public class Runner : MonoBehaviour {
     }
 
     void Update() {
-        // Jump
+        // Jump with Space
         if (Input.GetButtonDown("Jump")) {
-            Debug.Log("X Velo:" + rb.velocity.x);
-
             if (touchingPlatform) {
                 if (rb.velocity.x > 0) {
                     PlayerJump();
@@ -57,6 +55,7 @@ public class Runner : MonoBehaviour {
             }
         }
 
+        // Jump with Touch
         if (Input.touchCount > 0 && !UIManager.IsTouchingUI()) {
             Touch touch = Input.GetTouch(0);
 
@@ -83,8 +82,7 @@ public class Runner : MonoBehaviour {
     }
 
     void PlayerClimb() {
-        if (canClimb) {
-            Debug.Log("CLIMB!");
+        if (canClimb) {            
             canClimb = false;
             rb.AddForce(climbVelocity, ForceMode.VelocityChange);
             AudioSource.PlayOneShot(climbSound);

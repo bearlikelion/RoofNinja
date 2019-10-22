@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class MarkerSound : MonoBehaviour
 {
-    private AudioSource audio;
+    private AudioSource AudioSource;
 
     // Start is called before the first frame update
     void Start()
     {
-        audio = GetComponent<AudioSource>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        AudioSource = GetComponent<AudioSource>();
+        if (AudioSource == null) {
+            Debug.Log("MarkerSound Missing AudioSource on " + gameObject.name);
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
-        audio.Play();
+        if (AudioSource != null) {
+            AudioSource.Play();
+        }        
     }
 }

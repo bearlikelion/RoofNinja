@@ -12500,7 +12500,7 @@ MonoBehaviour:
   footsteps: {fileID: 203324685}
   gameOverY: -6
   Acceleration: 5
-  boostVelocity: {x: 3, y: 5, z: 0}
+  boostVelocity: {x: 5, y: 3, z: 0}
   jumpVelocity: {x: 1, y: 7, z: 0}
   climbVelocity: {x: 0, y: 10, z: 0}
 --- !u!82 &203324684
